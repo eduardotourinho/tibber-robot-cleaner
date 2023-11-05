@@ -1,0 +1,1 @@
+CREATE SCHEMA cleaner_robot_test

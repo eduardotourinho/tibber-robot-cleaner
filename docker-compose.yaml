@@ -1,0 +1,53 @@
+version: '3.8'
+
+
+services:
+  postgres:
+    container_name: cleaner-postgres
+    image: postgres:16.0-alpine
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    env_file:
+      - ./docker/.env
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./docker/create-db.sql:/docker-entrypoint-initdb.d/create_database.sql
+
+  api:
+    container_name: cleaner-api
+    build:
+      dockerfile: ./docker/Dockerfile
+      context: .
+    working_dir: /app
+    depends_on:
+      - postgres
+    ports:
+      - 5000:5000
+    env_file:
+      - ./docker/.env
+    volumes:
+      - .:/app
+
+  test:
+    container_name: cleaner-api-test
+    build:
+      dockerfile: ./docker/Dockerfile-test
+      context: .
+    working_dir: /app
+    depends_on:
+      - postgres
+    environment:
+      - DB_HOST=postgres
+    env_file:
+      - ./tests/.env
+    volumes:
+      - .:/app
+
+volumes:
+  db:
+    driver: local
+
