@@ -1,3 +1,5 @@
 /CleanerRobot.iml
 /.idea/
 /venv/
+
+__pycache__
