@@ -73,7 +73,7 @@ def test_schema_parameters(test_client, json):
 
 def test_request_successul_clean_command(test_client):
     response = test_client.post(
-        "/tibber-developer-test/enter-path",
+        "/tibber-developer-test/enter-path?size=10",
         json={
             "start": {"x": 0, "y": 0},
             "commands": [

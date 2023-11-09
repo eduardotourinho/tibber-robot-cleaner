@@ -27,13 +27,14 @@ class Command:
 class MoveCommand:
     origin: Point
     commands: List[Command]
+    room_size: int = 100_000
 
 
 @dataclass(frozen=True)
 class MoveCommandResult:
-    steps: Set[Point]
     command_count: int
     process_time: float
+    steps_count: int
 
 
 @dataclass(frozen=True)

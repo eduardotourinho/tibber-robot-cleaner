@@ -16,7 +16,7 @@ class ExecutionRepository(CommandExecutionStorageManager):
         with Session(self.engine) as session:
             execution = Execution(
                 commands=command_results.command_count,
-                result=len(command_results.steps),
+                result=command_results.steps_count,
                 duration=command_results.process_time
             )
 

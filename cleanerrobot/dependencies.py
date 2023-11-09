@@ -8,7 +8,6 @@ from .adapters.storage.db import initialize_db, get_db_config
 from .adapters.storage.repositories import ExecutionRepository
 from .app.ports.input import MoveCommandUseCase
 from .app.ports.output import CommandExecutionStorageManager
-from .app.services.command_processor import CommandProcessor
 from .app.services.robot_core import RobotCore
 
 environment = os.environ.get("APP_ENV", "dev")
@@ -29,4 +28,4 @@ def get_storage_manager() -> CommandExecutionStorageManager:
 
 def get_move_service(
         storage_manager: CommandExecutionStorageManager = Depends(get_storage_manager)) -> MoveCommandUseCase:
-    yield RobotCore(CommandProcessor(), storage_manager)
+    yield RobotCore(storage_manager)

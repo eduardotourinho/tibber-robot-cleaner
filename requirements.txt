@@ -1,5 +1,6 @@
 fastapi~=0.104
 httpx~=0.25.1
+numpy~=1.26
 psycopg[binary]~=3.1
 python-dotenv~=1.0
 pytest~=7.4

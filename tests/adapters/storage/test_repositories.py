@@ -15,7 +15,7 @@ def subject(db_engine):
 
 def test_save(subject):
     command_result = MoveCommandResult(
-        steps={Point(0, 0), Point(0, 1), Point(0, 3), Point(1, 3), Point(1, 4)},
+        steps_count=5,
         command_count=2,
         process_time=0.000123
     )

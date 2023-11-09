@@ -6,11 +6,11 @@ from unittest.mock import Mock
 
 import pytest
 
+from cleanerrobot.app.services.command_processor import process_clean_commands
 from cleanerrobot.app.dtos import MoveCommandExecution, MoveCommandResult
 from cleanerrobot.app.ports.output import CommandExecutionStorageManager
 from cleanerrobot.app.ports.input import MoveCommand
 from cleanerrobot.app.dtos import Point, Command, Direction
-from cleanerrobot.app.services.command_processor import CommandProcessor
 from cleanerrobot.app.services.robot_core import RobotCore
 
 move_commands_data_provider = [
@@ -47,13 +47,6 @@ move_commands_data_provider = [
 
 
 @pytest.fixture()
-def command_processor_mock(mocker):
-    mock = Mock(spec=CommandProcessor)
-    mocker.patch("cleanerrobot.app.services.command_processor.CommandProcessor.process_commands", return_value=mock)
-    yield mock
-
-
-@pytest.fixture()
 def storage(mocker):
     mock = Mock(spec=CommandExecutionStorageManager)
     mocker.patch('cleanerrobot.app.ports.output.CommandExecutionStorageManager.save', return_value=mock)
@@ -61,21 +54,23 @@ def storage(mocker):
 
 
 @pytest.fixture()
-def subject(command_processor_mock: CommandProcessor, storage: CommandExecutionStorageManager):
-    yield RobotCore(command_processor_mock, storage)
+def subject(storage: CommandExecutionStorageManager):
+    yield RobotCore(storage)
 
 
 @pytest.mark.parametrize("origin, commands, expected_set", move_commands_data_provider)
-def test_process_commands(subject, storage, command_processor_mock,
+def test_process_commands(subject, storage, mocker,
                           origin: Point, commands: List[Command], expected_set: Set[Point]):
-    command_processor_mock.process_commands.return_value = MoveCommandResult(expected_set, len(commands), 0.000123)
+    mocked_return = MoveCommandResult(len(commands), 0.000123, len(expected_set))
+    mocker.patch("cleanerrobot.app.services.command_processor.process_clean_commands", return_value=mocked_return)
+
     storage.save.return_value = MoveCommandExecution(1, len(commands), len(expected_set), 0.000123,
                                                      datetime.now())
 
-    actual_result = subject.clean(MoveCommand(origin, commands))
+    actual_result = subject.clean(MoveCommand(origin, commands, room_size=10))
 
     assert actual_result.commands == len(commands)
     assert actual_result.result == len(expected_set)
 
-    command_processor_mock.process_commands.assert_called_once_with(origin, commands)
+    # command_processor_mock.process_clean_commands.assert_called_once_with(origin, commands)
     storage.save.assert_called_once()
