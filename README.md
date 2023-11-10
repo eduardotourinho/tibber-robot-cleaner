@@ -86,7 +86,7 @@ The code is organized based on the [Hexagonal architecture](https://en.wikipedia
 
 The application run successfully with a large dataset under Docker. The specs of the testing machine:
 
-- Processor: (R) Core(TM) i9-10980HK CPU@2.40GHz
+- Processor: Intel(R) Core(TM) i9-10980HK CPU@2.40GHz
 - RAM: 32GB
 - OS: Windows 11 Home
 - Docker desktop running under WSL2
