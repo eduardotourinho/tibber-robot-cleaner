@@ -49,7 +49,7 @@ class MoveCommandResponse:
 The application can be run from docker, executing the command from the project's root:
 
 ```shell
-docker-compose up -d api
+docker-compose up --build -d api
 ```
 
 ## Testing
@@ -57,6 +57,7 @@ docker-compose up -d api
 To run the tests, execute:
 
 ```shell
+docker-compose build test
 docker-compose run --rm test
 ```
 
@@ -69,6 +70,7 @@ The chosen tech stack to implement was the following :
 - SQLAlchemy ORM
 - Postgres databases
 
+
 ### Code Architecture
 
 The code is organized based on the [Hexagonal architecture](https://en.wikipedia.org/wiki/Hexagonal_architecture_(software)):
@@ -79,3 +81,14 @@ The code is organized based on the [Hexagonal architecture](https://en.wikipedia
 ### Architecture Diagram
 
 ![tibber architecture design.jpg](docs%2Ftibber%20architecture%20design.jpg)
+
+### Notes on large datasets
+
+The application run successfully with a large dataset under Docker. The specs of the testing machine:
+
+- Processor: (R) Core(TM) i9-10980HK CPU@2.40GHz
+- RAM: 32GB
+- OS: Windows 11 Home
+- Docker desktop running under WSL2
+
+Using this configuration, the return time of the request was in the range of `30s` and `70s`.

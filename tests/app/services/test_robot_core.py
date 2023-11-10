@@ -1,12 +1,9 @@
-import pytest
-
 from datetime import datetime
 from typing import List, Set
 from unittest.mock import Mock
 
 import pytest
 
-from cleanerrobot.app.services.command_processor import process_clean_commands
 from cleanerrobot.app.dtos import MoveCommandExecution, MoveCommandResult
 from cleanerrobot.app.ports.output import CommandExecutionStorageManager
 from cleanerrobot.app.ports.input import MoveCommand
@@ -45,6 +42,9 @@ move_commands_data_provider = [
     )
 ]
 
+SET_PROCESSOR_CMD_MODULE = "cleanerrobot.app.services.processors.set_processor.process_clean_commands"
+ARRAY_PROCESSOR_CMD_MODULE = "cleanerrobot.app.services.processors.array_processor.process_clean_commands"
+
 
 @pytest.fixture()
 def storage(mocker):
@@ -62,7 +62,7 @@ def subject(storage: CommandExecutionStorageManager):
 def test_process_commands(subject, storage, mocker,
                           origin: Point, commands: List[Command], expected_set: Set[Point]):
     mocked_return = MoveCommandResult(len(commands), 0.000123, len(expected_set))
-    mocker.patch("cleanerrobot.app.services.command_processor.process_clean_commands", return_value=mocked_return)
+    mocker.patch(SET_PROCESSOR_CMD_MODULE, return_value=mocked_return)
 
     storage.save.return_value = MoveCommandExecution(1, len(commands), len(expected_set), 0.000123,
                                                      datetime.now())
@@ -72,5 +72,4 @@ def test_process_commands(subject, storage, mocker,
     assert actual_result.commands == len(commands)
     assert actual_result.result == len(expected_set)
 
-    # command_processor_mock.process_clean_commands.assert_called_once_with(origin, commands)
     storage.save.assert_called_once()
