@@ -92,3 +92,16 @@ The application run successfully with a large dataset under Docker. The specs of
 - Docker desktop running under WSL2
 
 Using this configuration, the return time of the request was in the range of `30s` and `70s`.
+
+If you receive a memory allocation error when running with docker under macOS or Linux, try to change the kernel's `overcommit_memory` configuration executing one of the commands:
+
+
+```shell
+sudo sysctl vm.overcommit_memory=1
+```
+
+or
+
+```shell
+echo 1 | sudo tee /proc/sys/vm/overcommit_memory
+```
