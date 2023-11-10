@@ -33,7 +33,7 @@ def get_connection_string(config: DbConfig) -> str:
 
 
 def get_db_engine(conn_str: str | None = None) -> Engine:
-    return create_engine(conn_str, echo=True)
+    return create_engine(conn_str, echo=False)
 
 
 def drop_all_tables(engine: Engine) -> None:
